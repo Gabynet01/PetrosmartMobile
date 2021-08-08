@@ -28,12 +28,20 @@ import AboutApp from './src/components/OptionsMenu/UserProfileClicks/AboutApp';
 import SubmitFeedback from './src/components/OptionsMenu/UserProfileClicks/SubmitFeedback';
 import CarInfo from './src/components/OptionsMenu/UserProfileClicks/CarInfo';
 import MapPromptDriver from './src/components/Dashboard/PurchaseFuel/MapPromptDriver';
+import FleetManagerNavigation from './src/components/OnBoarding/FleetManagerNavigation';
+import DriverListView from './src/components/FleetManager/DriverList/DriverList';
+import DriverInfoDetails from './src/components/FleetManager/DriverList/DriverInfoDetails';
+import VehicleListView from './src/components/FleetManager/VehicleList/VehicleList';
+import VehicleInfoDetails from './src/components/FleetManager/VehicleList/VehicleInfoDetails';
+import StationList from './src/components/FleetManager/StationList/StationList';
+import StationInfoDetails from './src/components/FleetManager/StationList/StationInfoDetails';
 
 const RootStack = createStackNavigator(
 {
   //OnBoarding
   StartPage: {screen: StartPageView},
   DriverNavigationPage: {screen: DriverNavigation},
+  FleetManagerNavigationPage: {screen: FleetManagerNavigation},
   LoginPage: { screen: Login },
   DashboardPage: { screen: Dashboard },
   ResetConfirmOtpPage: { screen: ResetConfirmOtp },
@@ -62,6 +70,12 @@ const RootStack = createStackNavigator(
   FleetManagerApprovedPage: { screen: FleetManagerApprovedRequestView},
   FleetManagerRejectedPage: { screen: FleetManagerRejectedRequestView},
   FleetManagerDetailsPage: { screen: FleetManagerRequestDetailsView},
+  DriverListPage: { screen: DriverListView},
+  DriverInfoView: { screen: DriverInfoDetails},
+  VehicleListPage: { screen: VehicleListView},
+  VehicleInfoView: { screen: VehicleInfoDetails},
+  StationListPage: { screen: StationList},
+  StationInfoView: { screen: StationInfoDetails},
 },
 {
     initialRouteName: 'StartPage',

@@ -1,7 +1,7 @@
 //import liraries
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Image, Dimensions, TouchableOpacity, ImageBackground } from 'react-native';
 import ActionBarImage from '../Utilities/ActionBarImage';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { BottomSheet } from 'react-native-elements';
@@ -10,24 +10,14 @@ import FleetManagerOptionsMenuView from '../OptionsMenu/FleetManagerOptionsMenu'
 import { Avatar, Card } from 'react-native-elements';
 import OneSignal from 'react-native-onesignal';
 
+import RecentRequests from './RecentRequests';
+
 const win = Dimensions.get('window');
 
 // create a component
 class FleetManagerDashboard extends React.Component {
     static navigationOptions = {
-        // headerTitle: () => <ActionBarImage />,
-        title: "etrosmart",
-        headerLeft: () => <ActionBarImage />,
-        headerRight: () => <FleetManagerOptionsMenuView />,
-        // headerRight: <MapBarIcon />,
-        headerStyle: {
-            backgroundColor: '#4c4c4c',
-            height: 80
-        },
-        headerTitleStyle: {
-            color: '#fff',
-            marginLeft: -15
-        }
+        
     };
 
     // Constructor for this component
@@ -171,100 +161,10 @@ class FleetManagerDashboard extends React.Component {
         }
     }
 
-    //go to Pending
-    gotoPendingRequests = () => {
-        this.props.navigation.navigate("FleetManagerPendingPage");
-    }
-
-    gotoApprovedRequests = () => {
-        this.props.navigation.navigate("FleetManagerApprovedPage");
-    }
-
-    gotoRejectedRequests = () => {
-        this.props.navigation.navigate("FleetManagerRejectedPage");
-    }
-
     render() {
         return (
             <>
-                <StatusBar barStyle="dark-content" />
-                <SafeAreaView>
-                    <ScrollView
-                        contentInsetAdjustmentBehavior="automatic"
-                        style={styles.scrollView}>
-                        <View style={styles.container}>
-
-                            <View style={{
-                                flex: 1,
-                                flexDirection: 'row',
-                                justifyContent: 'space-between'
-                            }}>
-                                <View>
-                                    <Text style={styles.profileText}>{this.state.loggedInUserName}</Text>
-                                </View>
-
-                                <View>
-                                    <Text style={styles.profileNumberText}>{this.state.usermobile}</Text>
-
-                                </View>
-
-                            </View>
-
-                            <Card containerStyle={{
-                                paddingTop: 30,
-                                paddingBottom: 45,
-                                backgroundColor: "#f9f9f9",
-                                borderRadius: 7,
-                                borderWidth: 1,
-                                borderColor: '#f9f9f9',
-                                shadowColor: "#455A64",
-                                shadowOpacity: 0.1,
-                                elevation: 0.1,
-                            }}>
-                                <TouchableOpacity style={styles.solidButtonContainer}
-                                    onPress={() => this.gotoPendingRequests()}>
-                                    <Text style={styles.solidButtonText}>PENDING</Text>
-                                </TouchableOpacity>
-                            </Card>
-
-                            <Card containerStyle={{
-                                paddingTop: 30,
-                                paddingBottom: 45,
-                                backgroundColor: "#f9f9f9",
-                                borderRadius: 7,
-                                borderWidth: 1,
-                                borderColor: '#f9f9f9',
-                                shadowColor: "#455A64",
-                                shadowOpacity: 0.1,
-                                elevation: 0.1,
-                            }}>
-                                <TouchableOpacity style={styles.otherButtonContainer}
-                                    onPress={() => this.gotoApprovedRequests()}>
-                                    <Text style={styles.otherButtonText}>APPROVED</Text>
-                                </TouchableOpacity>
-                            </Card>
-
-                            <Card containerStyle={{
-                                paddingTop: 30,
-                                paddingBottom: 45,
-                                backgroundColor: "#f9f9f9",
-                                borderRadius: 7,
-                                borderWidth: 1,
-                                borderColor: '#f9f9f9',
-                                shadowColor: "#455A64",
-                                shadowOpacity: 0.1,
-                                elevation: 0.1,
-                            }}>
-                                <TouchableOpacity style={styles.rejectedButtonContainer}
-                                    onPress={() => this.gotoRejectedRequests()}>
-                                    <Text style={styles.rejectedButtonText}>REJECTED</Text>
-                                </TouchableOpacity>
-                            </Card>
-
-                        </View>
-
-                    </ScrollView>
-                </SafeAreaView>
+                <RecentRequests parent="Transaction" navigation={this.props.navigation} />
             </>
         );
     }
@@ -273,85 +173,103 @@ class FleetManagerDashboard extends React.Component {
 // define your styles
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
-        paddingBottom: win.height / 6.5
-    },
-    cardContainer: {
-        padding: 56,
-        paddingBottom: win.height / 6.5
-    },
-    scrollView: {
-        backgroundColor: Colors.lighter,
+
     },
     profileText: {
-        color: '#212121',
-        textAlign: 'center',
-        fontWeight: '600',
-        marginTop: 10,
-        marginBottom: 10,
-        fontSize: 18
+        color: '#380507',
+        fontStyle: 'normal',
+        fontWeight: '500',
+        marginLeft: 30,
+        marginTop: 6,
+        fontSize: 22,
+        lineHeight: 28
     },
-    profileNumberText: {
-        color: '#f3931c',
-        textAlign: 'center',
-        fontWeight: '600',
-        marginTop: 10,
-        marginBottom: 10,
-        fontSize: 18
+    greetingText: {
+        fontSize: 12,
+        fontWeight: '400',
+        fontStyle: 'normal',
+        lineHeight: 15.18,
+        color: '#9E9B9B'
     },
-    solidButtonContainer: {
-        backgroundColor: '#f15a29',
+    profileContainer: {
         marginTop: 20,
-        paddingTop: 15,
-        paddingBottom: 15,
-        borderRadius: 7,
-        borderWidth: 2,
-        borderColor: '#FFF',
-        shadowColor: "#455A64",
+        marginRight: 10,
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+    },
+    imageBg: {
+        width: 80,
+        height: 80,
+        resizeMode: "cover",
+        justifyContent: "center",
         shadowOpacity: 0.1,
         elevation: 0.1,
+        shadowColor: "#455A64"
     },
-    solidButtonText: {
-        color: '#FFF',
-        textAlign: 'center',
-        fontWeight: '600',
-        fontSize: 18
+    iconAvatar: {
+        marginLeft: 30,
+        marginTop: -15
     },
-    otherButtonContainer: {
-        backgroundColor: '#f3931c',
-        marginTop: 20,
-        paddingTop: 15,
-        paddingBottom: 15,
-        borderRadius: 7,
-        borderWidth: 2,
-        borderColor: '#FFF',
+    imageAvatar: {
+        width: 23,
+        height: 23,
+        shadowOpacity: 0.1,
         shadowColor: "#455A64",
+        marginLeft: 28,
+        marginTop: -20
+    },
+    bannerCard: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+    },
+    vectorBg: {
+        width: 46,
+        height: 46,
+        resizeMode: "cover",
+        justifyContent: "center",
         shadowOpacity: 0.1,
         elevation: 0.1,
+        shadowColor: "#455A64"
     },
-    otherButtonText: {
-        color: '#FFF',
-        textAlign: 'center',
-        fontWeight: '600',
-        fontSize: 18
+    vectorIcon: {
+        marginLeft: 9,
+        marginTop: 0,
+        width: 26,
+        height: 24
     },
-    rejectedButtonContainer: {
-        backgroundColor: '#4c4c4c',
-        marginTop: 20,
-        paddingTop: 15,
-        paddingBottom: 15,
-        borderRadius: 7,
-        borderWidth: 2,
-        borderColor: '#FFF',
-        shadowColor: "#455A64",
-        shadowOpacity: 0.1,
-        elevation: 0.1,
+    cardCount: {
+        color: '#380507',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        marginTop: 6,
+        fontSize: 32,
+        lineHeight: 40
     },
-    rejectedButtonText: {
-        color: '#FFF',
-        textAlign: 'center',
-        fontWeight: '600',
-        fontSize: 18
+    vehicleCardCount: {
+        color: '#380507',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: 32,
+        lineHeight: 40,
+        marginLeft: 12,
+        marginTop: -6
+    },
+    vehicleCardText: {
+        color: '#999797',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        marginTop: 1,
+        fontSize: 16,
+        lineHeight: 20,
+        marginLeft: 12
+    },
+    cardText: {
+        color: '#999797',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        marginTop: 6,
+        fontSize: 16,
+        lineHeight: 20
     },
 });
 

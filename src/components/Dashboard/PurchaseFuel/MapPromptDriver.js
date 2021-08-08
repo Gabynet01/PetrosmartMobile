@@ -146,7 +146,7 @@ class MapPromptPurchase extends React.Component {
     // make the API call to fecth driver vehicles by ID
     fetchDriverVehiclesByID() {
         // initiate loader here 
-        this.showLoader();
+        // this.showLoader();
 
         // Make the API call here
         fetch(this.state.baseUrl + this.state.apiRoute + 'drivers/get/vehicles/' + this.state.driverId, {
@@ -198,7 +198,7 @@ class MapPromptPurchase extends React.Component {
 
     onButtonPress() {
         this.setState({ isPromptReady: true });
-                    this.setState({ isNoDataImage: false });
+        this.setState({ isNoDataImage: false });
         //some checks
         if ((this.state.purchaseAmount == "" || this.state.purchaseAmount == undefined) && (this.state.selectedVehicle == "" || this.state.selectedVehicle == undefined)) {
             // display toast activity
@@ -267,7 +267,7 @@ class MapPromptPurchase extends React.Component {
     //API(2)---apply driver rules
     applyDriverRules(purchaseID) {
         this.setState({ isPromptReady: true });
-                    this.setState({ isNoDataImage: false });
+        this.setState({ isNoDataImage: false });
 
         // Make the API call here
         fetch(this.state.baseUrl + this.state.apiRoute + 'drivers/apply/rules', {

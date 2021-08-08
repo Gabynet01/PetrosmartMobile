@@ -104,6 +104,14 @@ class Helpers extends Component {
     return month_index;
   }
 
+  //get days from value
+  getFullDaysValue(data) {
+    var value = parseInt(data) - 1;
+    var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    var day_index = days[value];
+    return day_index;
+  }
+
   randomString() {
     var length = 15;
     var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

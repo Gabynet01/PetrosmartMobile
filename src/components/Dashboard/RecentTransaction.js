@@ -272,7 +272,7 @@ class RecentTransactionView extends React.Component {
                         <Text style={styles.transactionDate}>{moment(item.created_at).format('D MMM')}</Text>
                         <Badge
                             value={"Pending"}
-                            badgeStyle={{ backgroundColor: '#FFFEF5' }}
+                            badgeStyle={{ backgroundColor: '#FFFAE0' }}
                             textStyle={{ color: '#FFDB0F', fontSize: 9, lineHeight: 11, fontWeight: 'normal', fontFamily: 'circularstd-book' }}
                         />
                     </View>

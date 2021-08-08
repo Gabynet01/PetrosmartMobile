@@ -82,7 +82,7 @@ class StartPageView extends React.Component {
                             index: 0,
                             actions: [
                                 NavigationActions.navigate({
-                                    routeName: 'FleetManagerDashboardPage'
+                                    routeName: 'FleetManagerNavigationPage'
                                 }),
                             ],
                         }))

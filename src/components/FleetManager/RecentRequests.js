@@ -19,11 +19,13 @@ import successBox from '../../images/vectors/successBox.png';
 import pendingIcon from '../../images/vectors/pending.png';
 import pendingBox from '../../images/vectors/pendingBox.png';
 import failedIcon from '../../images/vectors/failed.png';
+import DashboardChart from './DashboardChart';
+import FleetManagerDashboardCards from './DashoardCards';
 
 const win = Dimensions.get('window');
 
 // create a component
-class TransactionListView extends React.Component {
+class RecentRequestsView extends React.Component {
     // Constructor for this component
     constructor(props) {
 
@@ -31,7 +33,7 @@ class TransactionListView extends React.Component {
 
         super(props);
         this.state = {
-            textDisable: false,
+            loggedInUserName: '',
             isListReady: false,
             isFetching: false,
             isNoDataImage: false,
@@ -51,16 +53,8 @@ class TransactionListView extends React.Component {
         }
     }
 
-    static navigationOptions = ({ navigation, screenProps }) => {
-        return {
-            title: "",
-            headerStyle: {
-                backgroundColor: '#F6F6F6',
-                elevation: 0, // remove shadow on Android
-                shadowOpacity: 0, // remove shadow on iOS
-            },
-            headerLeft: () => <Icon name="arrow-back" size={25} color="#000000" style={{ paddingLeft: 31.6 }} onPress={() => navigation.goBack()} />,
-        }
+    static navigationOptions = {
+        headerShown: null
     };
 
     // Handle pull to refresh
@@ -71,12 +65,6 @@ class TransactionListView extends React.Component {
             }
         );
     }
-
-    // This is called when the user profile image is clicked
-    onProfileImagePress() {
-        this.props.navigation.navigate('UserProfilePage');
-    }
-
 
     // SHOW LOADER
     showLoader() {
@@ -94,6 +82,7 @@ class TransactionListView extends React.Component {
             .then((result) => {
                 this.checkLogIn(result);
             })
+
     }
 
     // Use this to check the user logged in 
@@ -119,7 +108,7 @@ class TransactionListView extends React.Component {
 
                     for (var i = 1; i <= 12; i++) {
                         var monthName = objectClass.getFullMonthsValue(i);
-                        var mainData = { "month": monthName, "monthValue": i }
+                        var mainData = { "month": monthName }
                         listOptions.push(mainData);
                     }
 
@@ -129,7 +118,9 @@ class TransactionListView extends React.Component {
                     this.setState({ monthOptions: listOptions });
 
                     var allUserData = JSON.parse(result);
-                    this.setState({ driverId: allUserData[0]["driver_id"] })
+                    this.setState({ driverId: "33" })
+                    // this.setState({ driverId: allUserData[0]["driver_id"] })
+                    this.setState({ loggedInUserName: objectClass.toTitleCase(allUserData[0].name) })
 
                     //lets make the call next
                     this.fetchList();
@@ -138,7 +129,7 @@ class TransactionListView extends React.Component {
     }
 
 
-    // make the API call to fecth driver transactioons by ID
+    // make the API call to fecth driver vouchers by ID
     fetchList() {
         // initiate loader here 
         this.showLoader();
@@ -207,6 +198,7 @@ class TransactionListView extends React.Component {
             });
 
     }
+
 
     // handle the searching
     searchFilterFunction = text => {
@@ -307,65 +299,27 @@ class TransactionListView extends React.Component {
     // render the SearchBar here as the header of the list
     renderHeader = () => {
         return (
-            // <SearchBar
-            //     lightTheme
-            //     round
-            //     searchIcon={<Icon name={'search'} color="#86939e" />}
-            //     clearIcon={<Icon name={'close'} color="#86939e" />}
-            //     inputContainerStyle={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#FFF' }}
-            //     containerStyle={{ backgroundColor: 'white', borderColor: 'white' }}
-            //     placeholder="Type to filter"
-            //     value={this.state.value}
-            //     onChangeText={text => this.searchFilterFunction(text)}
-            // />
             <>
-                <View style={styles.profileContainer} >
-                    <TouchableOpacity onPress={() => this.onProfileImagePress()}>
-                        <Image style={styles.profileImage}
-                            source={profileImage}
-                        />
-                    </TouchableOpacity>
-                    <Text style={styles.currentDate}>{moment().format('Do, MMMM, YYYY')}</Text>
+                <View key={objectClass.randomString()}>
+                    <FleetManagerDashboardCards />
                 </View>
-                <Text style={styles.mainText}>Transactions</Text>
 
-                {/* Arrange the month and year pickers */}
+                <View key={objectClass.randomString()}>
+                    <DashboardChart />
+                </View>
+
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginBottom: 25
-                }}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={moment().format('MMMM, YYYY')}
-                        value={this.state.dateText}
-                        editable={this.state.textDisable}
-                    ></TextInput>
-                    <TouchableOpacity onPress={this.showDatePicker} style={styles.calendarIcon}>
-                        <Icon name="calendar" size={20} color="#999797" />
+                    marginTop: 24,
+                    marginBottom: 15
+
+                }} key={objectClass.randomString()}>
+                    <Text style={styles.mainText}>Recent Request</Text>
+                    <TouchableOpacity style={{ marginRight: 28 }}
+                        onPress={() => this.onButtonPress()}>
+                        <Text style={{ color: "#999797", fontSize: 13, fontWeight: "500", marginTop: 3 }}>View All <Icon name={'arrow-forward'} color="#999797" size={12} /></Text>
                     </TouchableOpacity>
-                    <DateTimePickerModal
-                        isVisible={this.state.isDatePickerVisible}
-                        mode="date"
-                        onConfirm={this.handleConfirm}
-                        onCancel={this.hideDatePicker}
-                    />
-
-                    {/* allow user to select the month they want to see the chart */}
-                    <View style={styles.pickerContainer}>
-                        <Picker
-                            selectedValue={this.state.chosenMonth}
-                            onValueChange={(itemValue, index) =>
-                                this.getTransactionsData(itemValue)}
-                        >
-                            <Picker.Item label="Month" value="" />
-                            {this.state.monthOptions.map((item, index) => {
-                                return (<Picker.Item label={item.month} value={item.monthValue} key={index} />)
-                            })}
-
-                        </Picker>
-
-                    </View>
                 </View>
             </>
         );
@@ -375,6 +329,16 @@ class TransactionListView extends React.Component {
     // This is called when an item is clicked
     viewDetails(rowData) {
         this.props.navigation.navigate('TransactionDetailsPage', { TransactionItemData: rowData });
+    }
+
+    // This is called when the user profile image is clicked
+    onProfileImagePress() {
+        this.props.navigation.navigate('UserProfilePage');
+    }
+
+    // This is called when the view all
+    onButtonPress() {
+        this.props.navigation.navigate("Transaction");
     }
 
     //Date Picker components
@@ -387,111 +351,29 @@ class TransactionListView extends React.Component {
     };
 
     handleConfirm = (date) => {
-        this.setState({ isDatePickerVisible: false });
         //console.log("date selected from picker--->", date);
         const monthAndYear = moment(date).format("MMMM, YYYY");
-        const selectedDate = moment(date).format("M/YYYY");
+        const selectedDate = moment(date).format("MM/YYYY");
         this.setState({ dateText: monthAndYear })
         this.setState({ selectedDateText: selectedDate })
-
-        //console.log("selected month and year -->>", monthAndYear)
-        //console.log("selected date -->>", selectedDate)
-
-        //lets split the selected date into month and year 
-        var splittedDate = selectedDate.split("/");
-        var selectedMonth = splittedDate[0];
-        var selectedYear = splittedDate[1];
-        //console.log("splitted Month and yearrr-->", selectedMonth, selectedYear);
-        this.filterTransactionsByDate(selectedMonth, selectedYear);
+        this.hideDatePicker;
     };
 
     getTransactionsData(selectedMonth) {
         //console.log("Selected Month is-->>>", selectedMonth);
-        this.setState({ chosenMonth: selectedMonth });
-        var selectedYear = moment().format("YYYY");
-        this.filterTransactionsByDate(selectedMonth, selectedYear);
+        this.setState({ chosenMonth: selectedMonth })
     }
-
-    //general function for both calendar and month picker
-    // make the API call to fecth driver transactioons by ID
-    filterTransactionsByDate(selectedMonth, selectedYear) {
-        // initiate loader here 
-        this.showLoader();
-
-        // Make the API call here
-        fetch(this.state.baseUrl + this.state.apiRoute + 'drivers/get/transactions/' + this.state.driverId + "/month/" + selectedMonth + "/year/" + selectedYear + "/history", {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-
-                //console.log("my response for fetch driver transactions history by ID api is--->>>")
-                //console.log(responseJson)
-
-                if (responseJson.code == "200") {
-
-                    //lets check if list is empty
-                    if (responseJson.data.length == 0) {
-                        this.setState({ isListReady: false });
-                        this.setState({ isFetching: false });
-                        this.setState({ isNoDataImage: true });
-                        this.setState({ isErrorImage: false });
-
-                        return;
-                    }
-
-                    //this will be used to populate the list items
-                    this.setState({ data: responseJson.data });
-                    this.setState({ transactionsData: responseJson.data });
-
-                    //call this function to populate the list items
-                    this.setState({ isListReady: true });
-                    this.setState({ isFetching: false });
-                    this.setState({ isNoDataImage: false });
-                    this.setState({ isErrorImage: false });
-
-                    this.hideLoader();
-
-                    // objectClass.displayToast(responseJson.message); //DISPLAY TOAST
-                }
-
-                else {
-                    this.hideLoader();
-                    this.setState({ isListReady: false });
-                    this.setState({ isFetching: false });
-
-                    //image hider
-                    this.setState({ isNoDataImage: true });
-                    this.setState({ isErrorImage: false });
-                    objectClass.displayToast(objectClass.toTitleCase(responseJson.message)); //display Error message
-                }
-            })
-            .catch((error) => {
-                this.hideLoader();
-                this.setState({ isListReady: false });
-                this.setState({ isFetching: false });
-
-                //image hider
-                this.setState({ isNoDataImage: false });
-                this.setState({ isErrorImage: true });
-                objectClass.displayToast("Could not connect to server");
-            });
-
-    }
-
 
     render() {
         return (
             // <ScrollView>
             <View style={styles.container}>
+
                 {this.state.isListReady ? (
                     <FlatList
                         keyExtractor={this.keyExtractor}
-                        data={this.state.data}
+                        data={this.state.data.slice(0, 5)}
+                        // data={this.state.data}
                         renderItem={this.renderItem}
                         // ItemSeparatorComponent={this.renderSeparator}
                         ListHeaderComponent={this.renderHeader}
@@ -500,40 +382,43 @@ class TransactionListView extends React.Component {
                     // stickyHeaderIndices={[0]}
                     />
 
-                ) : null}
+                ) : null
+                }
 
                 {/* Show loader */}
-                {this.state.isLoading ? (
-                    <ProgressBar color="#F35C24" style={{marginTop: 20, marginBottom: 20}}/>
-                ) : null}
+                {
+                    this.state.isLoading ? (
+                        <ProgressBar color="#F35C24" style={{ marginTop: 20, marginBottom: 20 }} />
+                    ) : null
+                }
 
                 {/* Show NoData Image when data is empty */}
-                {this.state.isNoDataImage ? (
-                    <View style={styles.centerItems}>
-                        <Image style={styles.logoContainer}
-                            source={noDataImage}
-                        />
-                        <Text>No transaction found.</Text>
-                        <TouchableOpacity onPress={() => this.fetchList()}>
-                            <Text style={styles.refreshTxt}>Tap to try again <Icon name={'arrow-forward'} color="#F35C24" size={16} /></Text>
-                        </TouchableOpacity>
-                    </View>
-                ) : null}
+                {
+                    this.state.isNoDataImage ? (
+                        <View style={styles.centerItems}>
+                            <Image style={styles.logoContainer}
+                                source={noDataImage}
+                            />
+                            <Text>No request found at this time.</Text>
+                        </View>
+                    ) : null
+                }
 
                 {/* Show Error Image when there is an error */}
-                {this.state.isErrorImage ? (
-                    <View style={styles.centerItems}>
-                        <Image style={styles.logoContainer}
-                            source={oopsImage}
-                        />
-                        <Text>OOPS!, Something went wrong.</Text>
-                        <TouchableOpacity onPress={() => this.fetchList()}>
-                            <Text style={styles.refreshTxt}>Tap to try again <Icon name={'arrow-forward'} color="#F35C24" size={16} /></Text>
-                        </TouchableOpacity>
-                    </View>
-                ) : null}
+                {
+                    this.state.isErrorImage ? (
+                        <View style={styles.centerItems}>
+                            <Image style={styles.logoContainer}
+                                source={oopsImage}
+                            />
+                            <Text>OOPS!, Something went wrong.</Text>
+                        </View>
+                    ) : null
+                }
 
-            </View>
+            </View >
+
+            // </ScrollView>
         );
     }
 }
@@ -541,7 +426,25 @@ class TransactionListView extends React.Component {
 // define your styles
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        // paddingBottom: win.height / 6.5
+    },
+    profileText: {
+        color: '#380507',
+        fontStyle: 'normal',
+        fontWeight: '500',
+        marginLeft: 30,
+        marginTop: 6,
+        marginBottom: 24,
+        fontSize: 22,
+        lineHeight: 28
+    },
+    greetingText: {
+        fontSize: 12,
+        fontWeight: '400',
+        fontStyle: 'normal',
+        lineHeight: 15.18,
+        color: '#9E9B9B'
     },
     profileContainer: {
         marginTop: 35,
@@ -555,17 +458,14 @@ const styles = StyleSheet.create({
         borderRadius: 16
     },
     currentDate: {
-        marginTop: 25,
         fontSize: 12,
         fontWeight: '400',
         fontStyle: 'normal',
         lineHeight: 15.18,
-        color: '#9E9B9B',
-        fontFamily: 'circularstd-book'
+        color: '#9E9B9B'
     },
     mainText: {
         paddingLeft: 32,
-        marginTop: 13,
         fontSize: 18,
         lineHeight: 23,
         fontStyle: 'normal',
@@ -575,7 +475,7 @@ const styles = StyleSheet.create({
     },
     pickerContainer: {
         height: 54,
-        marginLeft: 10,
+        marginLeft: 20,
         marginRight: 30,
         paddingLeft: 17,
         color: '#FBFBFB',
@@ -583,7 +483,7 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         backgroundColor: '#F35C24',
         borderRadius: 8,
-        width: 125,
+        width: 105,
         fontStyle: 'normal',
         fontWeight: 'normal',
 
@@ -602,7 +502,6 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         fontWeight: 'normal',
         fontStyle: 'normal',
-
     },
     calendarIcon: {
         marginTop: 32,
@@ -683,17 +582,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    refreshTxt: {
-        color: '#F35C24',
-        textAlign: 'center',
-        fontStyle: 'normal',
-        fontWeight: '600',
-        marginTop: 21,
-        marginBottom: 21,
-        fontSize: 16,
-        lineHeight: 20
-    },
 });
 
 //make this component available to the app
-export default withNavigation(TransactionListView);
+export default withNavigation(RecentRequestsView);

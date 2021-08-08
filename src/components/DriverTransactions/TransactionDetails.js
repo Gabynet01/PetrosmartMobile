@@ -34,8 +34,6 @@ class TransactionDetailsView extends React.Component {
 
     render() {
         return (
-
-
             <>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
@@ -48,7 +46,6 @@ class TransactionDetailsView extends React.Component {
                             <View style={styles.profileContainer} >
                                 <Text style={styles.currentDate}>{moment().format('Do, MMMM, YYYY')}</Text>
                             </View>
-
 
                             <View style={styles.formBody}>
 
@@ -79,7 +76,7 @@ class TransactionDetailsView extends React.Component {
                                             <View style={styles.badgeContainer}>
                                                 <Badge
                                                     value={"Pending"}
-                                                    badgeStyle={{ backgroundColor: '#FFFEF5', marginTop: 3 }}
+                                                    badgeStyle={{ backgroundColor: '#FFFAE0', marginTop: 3 }}
                                                     textStyle={{ color: '#FFDB0F', fontSize: 9, lineHeight: 11, fontWeight: 'normal', fontStyle: 'normal', fontFamily: 'circularstd-book', marginLeft: 6, marginRight: 6, marginBottom: 6, marginTop: 6 }}
                                                 />
                                             </View>
@@ -115,7 +112,7 @@ class TransactionDetailsView extends React.Component {
                                 }}>
                                     <View>
                                         <Text style={styles.contentHeadTxt}>{this.props.route.params.TransactionItemData.VehicleName}</Text>
-                                    </View>                                   
+                                    </View>
                                 </View>
 
                                 <View style={{
